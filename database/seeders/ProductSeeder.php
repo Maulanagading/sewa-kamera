@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+// Berfungsi untuk mengisi data awal (dummy data) khusus untuk tabel 'products'.
+// Menghindari input data secara manual dan mempercepat proses testing.
 class ProductSeeder extends Seeder
 {
     /**

@@ -43,6 +43,15 @@
             scroll-behavior: smooth;
         }
 
+        /* 
+         Berfungsi sebagai tampilan utama (Front-End) untuk pengguna.
+         File ini dapat menerima data dari Controller (seperti variabel $products)
+         dan menampilkannya menggunakan sintaks Blade ({{ $variabel }}).
+         
+         Catatan: Bagian HTML statis di bawah ini bisa diubah menjadi dinamis
+         menggunakan perulangan seperti @foreach jika datanya sudah tersedia dari database.
+        */
+
         body {
             margin: 0;
             background: var(--paper);
@@ -1716,19 +1725,19 @@
                     <div class="grid-products">
                         @if(isset($products['Kamera']))
                             @foreach($products['Kamera'] as $product)
-                            <article class="card" data-stock="{{ $product->stock }}">
-                                <div class="card__plate" style="background: transparent; padding: 0;">
-                                    <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
-                                        style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
-                                </div>
-                                <div class="card__name">{{ $product->name }}</div>
-                                <div class="card__meta">
-                                    <div class="card__price">Rp {{ number_format($product->price, 0, ',', '.') }}<span>/ hari</span></div><button class="card__add"
-                                        aria-label="Tambah"><svg>
-                                            <use href="#icon-plus" />
-                                        </svg></button>
-                                </div>
-                            </article>
+                                <article class="card" data-stock="{{ $product->stock }}">
+                                    <div class="card__plate" style="background: transparent; padding: 0;">
+                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
+                                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
+                                    </div>
+                                    <div class="card__name">{{ $product->name }}</div>
+                                    <div class="card__meta">
+                                        <div class="card__price">Rp {{ number_format($product->price, 0, ',', '.') }}<span>/
+                                                hari</span></div><button class="card__add" aria-label="Tambah"><svg>
+                                                <use href="#icon-plus" />
+                                            </svg></button>
+                                    </div>
+                                </article>
                             @endforeach
                         @endif
                     </div>
@@ -1741,19 +1750,19 @@
                     <div class="grid-products">
                         @if(isset($products['Lensa']))
                             @foreach($products['Lensa'] as $product)
-                            <article class="card" data-stock="{{ $product->stock }}">
-                                <div class="card__plate" style="background: transparent; padding: 0;">
-                                    <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
-                                        style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
-                                </div>
-                                <div class="card__name">{{ $product->name }}</div>
-                                <div class="card__meta">
-                                    <div class="card__price">Rp {{ number_format($product->price, 0, ',', '.') }}<span>/ hari</span></div><button class="card__add"
-                                        aria-label="Tambah"><svg>
-                                            <use href="#icon-plus" />
-                                        </svg></button>
-                                </div>
-                            </article>
+                                <article class="card" data-stock="{{ $product->stock }}">
+                                    <div class="card__plate" style="background: transparent; padding: 0;">
+                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
+                                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
+                                    </div>
+                                    <div class="card__name">{{ $product->name }}</div>
+                                    <div class="card__meta">
+                                        <div class="card__price">Rp {{ number_format($product->price, 0, ',', '.') }}<span>/
+                                                hari</span></div><button class="card__add" aria-label="Tambah"><svg>
+                                                <use href="#icon-plus" />
+                                            </svg></button>
+                                    </div>
+                                </article>
                             @endforeach
                         @endif
                     </div>
@@ -1766,19 +1775,19 @@
                     <div class="grid-products">
                         @if(isset($products['Aksesoris']))
                             @foreach($products['Aksesoris'] as $product)
-                            <article class="card" data-stock="{{ $product->stock }}">
-                                <div class="card__plate" style="background: transparent; padding: 0;">
-                                    <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
-                                        style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
-                                </div>
-                                <div class="card__name">{{ $product->name }}</div>
-                                <div class="card__meta">
-                                    <div class="card__price">Rp {{ number_format($product->price, 0, ',', '.') }}<span>/ hari</span></div><button class="card__add"
-                                        aria-label="Tambah"><svg>
-                                            <use href="#icon-plus" />
-                                        </svg></button>
-                                </div>
-                            </article>
+                                <article class="card" data-stock="{{ $product->stock }}">
+                                    <div class="card__plate" style="background: transparent; padding: 0;">
+                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
+                                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
+                                    </div>
+                                    <div class="card__name">{{ $product->name }}</div>
+                                    <div class="card__meta">
+                                        <div class="card__price">Rp {{ number_format($product->price, 0, ',', '.') }}<span>/
+                                                hari</span></div><button class="card__add" aria-label="Tambah"><svg>
+                                                <use href="#icon-plus" />
+                                            </svg></button>
+                                    </div>
+                                </article>
                             @endforeach
                         @endif
                     </div>
@@ -1888,7 +1897,7 @@
                             </svg>WA 24 Jam: 0812-8576-0835</li>
                         <li><svg>
                                 <use href="#icon-mail" />
-                            </svg>sajiwaraga38@gmail.com</li>
+                            </svg>sajiwaraga28@gmail.com</li>
                         <li><svg>
                                 <use href="#icon-pin" />
                             </svg>Karawang, kosambi</li>
@@ -1896,7 +1905,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <span>Kami ada untuk membantu karyamu bersinar.</span>
+                <span>Infinity in Creativity.</span>
             </div>
         </div>
     </footer>

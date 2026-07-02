@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+// Blueprint untuk membuat struktur tabel 'products' di database.
+// Dijalankan menggunakan perintah `php artisan migrate`.
 return new class extends Migration
 {
     /**
@@ -11,14 +13,15 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Mendefinisikan kolom-kolom untuk tabel 'products'.
         Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('category');
-            $table->integer('price');
-            $table->string('image');
-            $table->integer('stock')->default(1);
-            $table->timestamps();
+            $table->id(); // Primary key (ID otomatis)
+            $table->string('name'); // Kolom nama produk (string)
+            $table->string('category'); // Kolom kategori (string)
+            $table->integer('price'); // Kolom harga (integer)
+            $table->string('image'); // Kolom path/URL gambar (string)
+            $table->integer('stock')->default(1); // Kolom stok dengan nilai bawaan 1
+            $table->timestamps(); // Kolom created_at dan updated_at
         });
     }
 
