@@ -10,7 +10,10 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
+
+
     <style>
+        /*untuk menyimpan warna dan nanti bisa di panggil di code lain */
         :root {
             --ink: #15140f;
             --ink-soft: #4a473e;
@@ -33,7 +36,9 @@
             --shadow: 0 14px 40px -16px rgba(21, 20, 15, 0.25);
         }
 
+        /* Aturan wajib agar ukuran semua elemen (asli maupun hiasan) tidak bengkak saat diberi padding/border */
         *,
+        /*selector universal(untuk semua tag contoh <h1> <a> <span> <p> dll)*/
         *::before,
         *::after {
             box-sizing: border-box;
@@ -41,15 +46,16 @@
 
         html {
             scroll-behavior: smooth;
+            /*untuk membuat halaman scroll smooth*/
         }
 
         /* 
          Berfungsi sebagai tampilan utama (Front-End) untuk pengguna.
          File ini dapat menerima data dari Controller (seperti variabel $products)
-         dan menampilkannya menggunakan sintaks Blade ({{ $variabel }}).
+         dan menampilkannya menggunakan sintaks Blade (@{{ $variabel }}).
          
          Catatan: Bagian HTML statis di bawah ini bisa diubah menjadi dinamis
-         menggunakan perulangan seperti @foreach jika datanya sudah tersedia dari database.
+         menggunakan perulangan seperti @@foreach jika datanya sudah tersedia dari database.
         */
 
         body {
@@ -58,6 +64,7 @@
             color: var(--ink);
             font-family: 'Inter', system-ui, sans-serif;
             -webkit-font-smoothing: antialiased;
+            /*Untuk menghaluskan pinggiran teks (font) agar terlihat lebih tajam dan bersih */
             overflow-x: hidden;
         }
 
@@ -69,6 +76,7 @@
 
         a {
             color: inherit;
+            /*Untuk membuat warna link mengikuti/mewarisi warna teks pembungkusnya (agar tidak otomatis biru) */
             text-decoration: none;
         }
 
@@ -91,6 +99,7 @@
 
         button {
             font: inherit;
+            /*Untuk mengambil gaya font dari tag induknya (Supaya ukurannya seragam) */
             cursor: pointer;
         }
 
@@ -98,6 +107,7 @@
             font-family: 'Anton', sans-serif;
             font-weight: 400;
             text-transform: uppercase;
+            /*Untuk mengubah semua huruf menjadi besar (UPPERCASE) */
             letter-spacing: 0.01em;
             line-height: 0.98;
         }
@@ -1654,17 +1664,34 @@
                 <a href="#kontak">Kontak</a>
             </nav>
             <div class="nav__right">
+                @auth
+                    <span
+                        style="font-size:0.85rem; font-weight:600; color:var(--ink-soft); margin-right:10px; display:none;">Halo,
+                        {{ Auth::user()->name }}</span>
+                    <form action="{{ route('logout') }}" method="POST" style="margin:0; display:inline-block;">
+                        @csrf
+                        <button type="submit" class="btn btn-ghost"
+                            style="padding: 6px 16px; font-size: 0.8rem; border-color:var(--accent); color:var(--accent);">Logout</button>
+                    </form>
+                @endauth
                 <button class="hamburger" id="menuToggle" aria-label="Buka menu"><span></span></button>
             </div>
         </div>
     </header>
 
     <div class="mobile-nav" id="mobileNav">
-        <button class="mobile-nav__close" id="menuClose" aria-label="Tutup menu">✕</button>
+        <button class="mobile-nav__close" id="menuClose" aria-label="Tutup menu">X</button>
         <a href="#equipment">Equipment</a>
         <a href="#promo">Promo</a>
         <a href="#benefits">Keuntungan</a>
         <a href="#kontak">Kontak</a>
+        @auth
+            <form action="{{ route('logout') }}" method="POST" style="margin-top:20px;">
+                @csrf
+                <button type="submit"
+                    style="background:transparent; border:none; color:var(--accent); font-family:'Anton', sans-serif; font-size:2.1rem; text-transform:uppercase; padding:0; text-align:left; cursor:pointer;">LOGOUT</button>
+            </form>
+        @endauth
     </div>
 
     <main id="top">
@@ -1680,7 +1707,7 @@
             <div class="wrap hero__inner">
                 <span class="eyebrow on-dark">Gading Rental · sejak 2026</span>
                 <h1 class="display hero__title" style="margin-top:18px;">Creative Without,<br><em>Limit.</em></h1>
-                <p class="hero__sub"><b>jangan batasi kreativitas mu</b></bjangan><br>Sewa kamera, lensa, dan peralatan
+                <p class="hero__sub"><b>jangan batasi kreativitas mu</b><br>Sewa kamera, lensa, dan peralatan
                     kreator di
                     Karawang &amp;. Booking cepat, alat siap pakai, tanpa drama.</p>
                 <div class="hero__cta">
@@ -1711,6 +1738,83 @@
             </div>
         </section>
 
+        <!-- KOTAK ASISTEN AI -->
+        <div
+            style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 40px; border: 1px solid var(--line);">
+            <h3 style="margin-top:0; margin-bottom: 16px; font-weight: 600; font-size: 18px; color: var(--text);">
+                Tanya Asisten AI
+            </h3>
+
+            <div style="display:flex; gap:12px;">
+                <input type="text" id="ai-input"
+                    placeholder="Ketik pertanyaanmu..."
+                    style="flex:1; padding: 12px 16px; border-radius: 6px; border: 1px solid var(--line); font-size: 15px; outline: none;">
+                <button onclick="tanyaAI()" class="btn btn-primary" style="padding: 12px 24px; border-radius: 6px; font-weight: 500;">Tanya Sekarang</button>
+            </div>
+
+            <div id="ai-loading" style="display:none; color: #666; margin-top:20px; font-size: 14px;">
+                Asisten sedang mengetik jawaban...
+            </div>
+
+            <!-- Tempat jawaban muncul -->
+            <div id="ai-response"
+                style="margin-top: 20px; padding: 20px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb; display: none; line-height: 1.7; font-size: 15px; color: #374151;">
+            </div>
+        </div>
+
+        <!-- SCRIPT UNTUK MEMANGGIL API TANPA REFRESH HALAMAN -->
+        <script>
+            function tanyaAI() {
+                const input = document.getElementById('ai-input').value;
+                const responseBox = document.getElementById('ai-response');
+                const loadingBox = document.getElementById('ai-loading');
+
+                if (!input) return alert('Ketik pertanyaan dulu!');
+
+                // Tampilkan loading, sembunyikan kotak jawaban
+                loadingBox.style.display = 'block';
+                responseBox.style.display = 'none';
+
+                // Panggil URL /ai-ask (Controller) menggunakan Javascript Fetch (AJAX)
+                fetch("{{ route('ai.ask') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token keamanan bawaan Laravel
+                    },
+                    body: JSON.stringify({ pertanyaan: input })
+                })
+                .then(async res => {
+                    // Cek apakah server mengembalikan HTML (Error Laravel) alih-alih JSON
+                    const text = await res.text();
+                    try {
+                        return JSON.parse(text);
+                    } catch (err) {
+                        throw new Error("Sistem sibuk. Silakan refresh (F5) halaman Anda.");
+                    }
+                })
+                .then(data => {
+                    // Matikan loading
+                    loadingBox.style.display = 'none';
+                    
+                    // Tampilkan jawaban
+                    responseBox.style.display = 'block';
+                    
+                    if(data.status === 'success'){
+                        // Menampilkan jawaban dengan rapi
+                        responseBox.innerHTML = data.jawaban.replace(/\n/g, "<br>");
+                    } else {
+                        responseBox.innerHTML = '<span style="color:#ef4444">Gagal: ' + data.jawaban + '</span>';
+                    }
+                }).catch(err => {
+                    document.getElementById('ai-loading').style.display = 'none';
+                    document.getElementById('ai-response').style.display = 'block';
+                    document.getElementById('ai-response').innerHTML = '<span style="color:#ef4444">Error: ' + err.message + '</span>';
+                });
+            }
+        </script>
+
+
         <!-- featured equipment -->
         <section id="equipment">
             <div class="wrap">
@@ -1723,9 +1827,9 @@
                             <use href="#icon-bolt" />
                         </svg>Kamera</span>
                     <div class="grid-products">
-                        @if(isset($products['Kamera']))
+                        @if(isset($products['Kamera']) && count($products['Kamera']) > 0)
                             @foreach($products['Kamera'] as $product)
-                                <article class="card" data-stock="{{ $product->stock }}">
+                                <article class="card" data-id="{{ $product->id }}" data-stock="{{ $product->stock }}">
                                     <div class="card__plate" style="background: transparent; padding: 0;">
                                         <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
                                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
@@ -1739,6 +1843,9 @@
                                     </div>
                                 </article>
                             @endforeach
+                        @else
+                            <div style="padding: 1rem 0; color: #888; font-style: italic;">Belum ada data produk kamera.
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -1748,9 +1855,9 @@
                             <use href="#icon-bolt" />
                         </svg>Lensa</span>
                     <div class="grid-products">
-                        @if(isset($products['Lensa']))
+                        @if(isset($products['Lensa']) && count($products['Lensa']) > 0)
                             @foreach($products['Lensa'] as $product)
-                                <article class="card" data-stock="{{ $product->stock }}">
+                                <article class="card" data-id="{{ $product->id }}" data-stock="{{ $product->stock }}">
                                     <div class="card__plate" style="background: transparent; padding: 0;">
                                         <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
                                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
@@ -1764,6 +1871,9 @@
                                     </div>
                                 </article>
                             @endforeach
+                        @else
+                            <div style="padding: 1rem 0; color: #888; font-style: italic;">Belum ada data produk lensa.
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -1773,9 +1883,9 @@
                             <use href="#icon-bolt" />
                         </svg>Accessories</span>
                     <div class="grid-products">
-                        @if(isset($products['Aksesoris']))
+                        @if(isset($products['Aksesoris']) && count($products['Aksesoris']) > 0)
                             @foreach($products['Aksesoris'] as $product)
-                                <article class="card" data-stock="{{ $product->stock }}">
+                                <article class="card" data-id="{{ $product->id }}" data-stock="{{ $product->stock }}">
                                     <div class="card__plate" style="background: transparent; padding: 0;">
                                         <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
                                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
@@ -1789,6 +1899,9 @@
                                     </div>
                                 </article>
                             @endforeach
+                        @else
+                            <div style="padding: 1rem 0; color: #888; font-style: italic;">Belum ada data produk aksesoris.
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -1809,7 +1922,6 @@
                             berlangsung. Booking sekarang
                             sebelum
                             slot penuh.</p>
-
                     </div>
         </section>
 
@@ -1916,11 +2028,20 @@
             <span id="cartCount">0 Alat Terpilih</span>
             <b id="cartTotal">Rp 0</b>
         </div>
-        <a href="#" class="btn-wa" id="btnCheckoutWa" target="_blank">
-            <svg width="18" height="18">
-                <use href="#icon-wa" />
-            </svg> Sewa via WA
-        </a>
+
+        <form action="{{ route('booking.store') }}" method="POST" id="checkoutForm"
+            style="display:flex; gap:12px; align-items:center;">
+            @csrf
+            <input type="hidden" name="cart" id="cartData">
+            <input type="date" name="start_date" required
+                style="padding: 8px; border: 1px solid var(--line); border-radius: 6px; font-family: var(--text-font); font-size:0.85rem;"
+                min="{{ date('Y-m-d') }}" title="Tanggal Pengambilan">
+            <button type="submit" class="btn-wa" style="border:none; cursor:pointer; font-family: inherit;">
+                <svg width="18" height="18">
+                    <use href="#icon-wa" />
+                </svg> Sewa Sekarang
+            </button>
+        </form>
     </div>
 
     <script>
@@ -1985,17 +2106,8 @@
                 }, 0);
                 cartTotal.innerText = formatRupiah(total);
 
-                // build WA message
-                let msg = `Halo admin Gading Rental, saya mau sewa alat:\n\n`;
-                cart.forEach((item, index) => {
-                    const paidDays = item.days - Math.floor(item.days / 3);
-                    const itemTotal = item.price * item.qty * paidDays;
-                    const promoText = (item.days >= 3) ? ` (Promo)` : ``;
-                    msg += `${index + 1}. [${item.qty}x] ${item.name} - ${item.days} Hari${promoText} (${formatRupiah(itemTotal)})\n`;
-                });
-                msg += `\n*Total: ${formatRupiah(total)}*\n\nApakah alatnya tersedia?`;
-
-                btnCheckoutWa.href = `https://wa.me/6281285760835?text=${encodeURIComponent(msg)}`;
+                // Update hidden input form
+                document.getElementById('cartData').value = JSON.stringify(cart);
             } else {
                 floatingCart.classList.remove('active');
             }
@@ -2093,19 +2205,20 @@
                 const name = nameEl.textContent.trim();
                 const priceText = priceEl.textContent.trim();
                 const price = parseInt(priceText.replace(/[^0-9]/g, '')) || 0;
+                const id = card.getAttribute('data-id');
 
                 btnAdd.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    let item = cart.find(i => i.name === name);
+                    let item = cart.find(i => i.id === id);
                     if (item) {
                         if (item.qty >= maxStock) {
                             return;
                         }
                         item.qty++;
                     } else {
-                        item = { name, price, qty: 1, days: 1, maxStock };
+                        item = { id, name, price, qty: 1, days: 1, maxStock };
                         cart.push(item);
                     }
 
@@ -2168,6 +2281,8 @@
             }
         });
     </script>
+
+
 
 </body>
 

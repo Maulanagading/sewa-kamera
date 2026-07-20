@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email')->unique(); // Email pengguna (harus unik)
             $table->timestamp('email_verified_at')->nullable(); // Tanggal verifikasi email
             $table->string('password'); // Password pengguna yang sudah di-hash
+            $table->enum('role', ['admin', 'user'])->default('user'); // Peran pengguna
             $table->rememberToken(); // Token untuk fitur "Remember Me"
             $table->timestamps(); // Kolom created_at dan updated_at
         });
